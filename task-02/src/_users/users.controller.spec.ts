@@ -58,4 +58,44 @@ describe('UsersController', () => {
       expect(result).toEqual(mockData);
     });
   });
+
+  describe('findAllUsers', () => {
+    it('should return a array of the Users', async () => {
+      const mockData = [
+        {
+          id: '1',
+          firstName: 'User 1',
+          email: 'user@gmail.com',
+          hashedPass: '12sbdt38dy3',
+          createdAt:
+            'Wed Apr 10 2024 00:20:33 GMT+0200 (Central European Summer Time)',
+          lastName: 'Wilkowski',
+          phoneNumber: 123456789,
+          shirtSize: 34,
+          preferredTechnology: 'Node',
+          token: '',
+        },
+      ];
+      const mockedSignedUser = {
+        id: {
+          id: '1',
+          firstName: 'User 1',
+          email: 'user@gmail.com',
+          hashedPass: '12sbdt38dy3',
+          createdAt:
+            'Wed Apr 10 2024 00:20:33 GMT+0200 (Central European Summer Time)',
+          lastName: 'Wilkowski',
+          phoneNumber: 123456789,
+          shirtSize: 34,
+          preferredTechnology: 'Node',
+          token: '',
+          expiration: 1,
+        },
+      };
+      jest.spyOn(service, 'findAllUsers').mockResolvedValueOnce(mockData);
+
+      const result = await controller.findAllUsers(mockedSignedUser.id);
+      expect(result).toEqual(mockData);
+    });
+  });
 });

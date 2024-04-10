@@ -1,7 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UsersService } from './users.service';
 import axios from 'axios';
-import { ForbiddenException } from '@nestjs/common';
+import { ForbiddenException, NotFoundException } from '@nestjs/common';
+import { SignUpDto } from './dtos/sing.up.dto';
 
 jest.mock('axios');
 
@@ -55,6 +56,56 @@ describe('UsersService', () => {
       await expect(service.signUp(signUpDto)).rejects.toThrowError(
         ForbiddenException,
       );
+    });
+  });
+
+  describe('findAllUsers', () => {
+    const mockUsers = [
+      {
+        id: '1',
+        firstName: 'User 1',
+        email: 'user@gmail.com',
+        hashedPass: '12sbdt38dy3',
+        createdAt:
+          'Wed Apr 10 2024 00:20:33 GMT+0200 (Central European Summer Time)',
+        lastName: 'Wilkowski',
+        phoneNumber: 123456789,
+        shirtSize: 34,
+        preferredTechnology: 'Node',
+        token: '',
+      },
+    ];
+    const mockedSignedUser = {
+      id: {
+        id: '1',
+        firstName: 'User 1',
+        email: 'user@gmail.com',
+        hashedPass: '12sbdt38dy3',
+        createdAt:
+          'Wed Apr 10 2024 00:20:33 GMT+0200 (Central European Summer Time)',
+        lastName: 'Wilkowski',
+        phoneNumber: 123456789,
+        shirtSize: 34,
+        preferredTechnology: 'Node',
+        token: '',
+        expiration: 1,
+      },
+    };
+    it('should return all users for signedUser', async () => {
+      (axios.get as jest.Mock).mockResolvedValueOnce({ data: mockUsers });
+
+      const result = await service.findAllUsers(mockedSignedUser.id.id);
+      expect(result).toEqual(mockUsers);
+    });
+
+    it('should throw NotFoundException if user not found', async () => {
+      (axios.get as jest.Mock).mockResolvedValueOnce({
+        response: { status: 404 },
+      });
+
+      await expect(
+        service.findAllUsers(mockedSignedUser.id.id),
+      ).rejects.toThrowError(NotFoundException);
     });
   });
 });
