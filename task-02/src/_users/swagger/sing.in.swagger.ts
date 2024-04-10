@@ -20,8 +20,8 @@ export const SwaggerForCreateUser = CombineSwaggerResponses(
     type: Users,
   }),
   ApiResponse({
-    status: 406,
-    description: 'NotAcceptableException',
+    status: 409,
+    description: 'ConflictException',
     content: {
       'application/json': {
         schema: {
@@ -33,9 +33,9 @@ export const SwaggerForCreateUser = CombineSwaggerResponses(
           },
         },
         example: {
-          status: 406,
+          status: 409,
           flag: false,
-          message: 'User with the given email already exists',
+          message: 'User with that email already exist',
         },
       },
     },

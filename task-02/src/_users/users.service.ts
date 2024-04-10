@@ -1,6 +1,6 @@
 import {
   BadRequestException,
-  ForbiddenException,
+  ConflictException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -27,7 +27,7 @@ export class UsersService {
       where: { email: signUpDto.email },
     });
     if (foundUser)
-      throw new ForbiddenException(`User with that email already exist`);
+      throw new ConflictException(`User with that email already exist`);
 
     const hashedPassword = await this.hashPassword(signUpDto.pass);
 

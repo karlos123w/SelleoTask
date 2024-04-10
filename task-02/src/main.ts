@@ -13,7 +13,7 @@ async function bootstrap() {
 
   const configService = app.get(ConfigService);
 
-  const port = configService.get<number>('PORT') || 3005;
+  const port = configService.get<number>('PORT') || process.env.PORT;
 
   setupSwagger(app);
 
@@ -26,7 +26,7 @@ async function bootstrap() {
 
   app.enableCors();
   await app.listen(port, async () => {
-    console.log(`server version on ${port}: ${version}`);
+    console.log(`server version ${version}, on port:${port}:`);
   });
   app.use(AuthMiddleware);
 }

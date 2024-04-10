@@ -12,7 +12,7 @@ async function bootstrap() {
     const packageJson = fs.readFileSync(`package.json`, `utf8`);
     const version = JSON.parse(packageJson).version;
     const configService = app.get(config_1.ConfigService);
-    const port = configService.get('PORT') || 3005;
+    const port = configService.get('PORT') || process.env.PORT;
     (0, swagger_setup_1.setupSwagger)(app);
     app.useGlobalPipes(new common_1.ValidationPipe({
         whitelist: true,
@@ -20,7 +20,7 @@ async function bootstrap() {
     }));
     app.enableCors();
     await app.listen(port, async () => {
-        console.log(`server version on ${port}: ${version}`);
+        console.log(`server version ${version}, on port:${port}:`);
     });
     app.use(auth_middleware_1.AuthMiddleware);
 }

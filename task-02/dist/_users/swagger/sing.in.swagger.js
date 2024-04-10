@@ -16,8 +16,8 @@ exports.SwaggerForCreateUser = CombineSwaggerResponses((0, swagger_1.ApiResponse
     description: 'Created user object as response',
     type: users_entity_1.Users,
 }), (0, swagger_1.ApiResponse)({
-    status: 406,
-    description: 'NotAcceptableException',
+    status: 409,
+    description: 'ConflictException',
     content: {
         'application/json': {
             schema: {
@@ -29,9 +29,9 @@ exports.SwaggerForCreateUser = CombineSwaggerResponses((0, swagger_1.ApiResponse
                 },
             },
             example: {
-                status: 406,
+                status: 409,
                 flag: false,
-                message: 'User with the given email already exists',
+                message: 'User with that email already exist',
             },
         },
     },
