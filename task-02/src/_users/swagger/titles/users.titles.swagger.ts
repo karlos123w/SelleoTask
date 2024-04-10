@@ -12,7 +12,3 @@ export const UsersSignUp = CreateUserApiOperation(
 export const UsersFindAll = CreateUserApiOperation(
   '"Find all users" - for Signed User',
 );
-
-export const UsersChangePassByAdmin = CreateUserApiOperation(
-  '"Change Pass By Admin" - for signed User',
-);
