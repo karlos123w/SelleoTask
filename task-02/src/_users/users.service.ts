@@ -50,6 +50,22 @@ export class UsersService {
     };
   }
 
+  async findAllUsers(signedUser: string) {
+    await this.findUserById(signedUser);
+
+    const foundAllUsers = await this.userModel.find();
+    if (!foundAllUsers) return [];
+
+    return foundAllUsers;
+  }
+
+  async findUserById(userId: string) {
+    const foundUser = await this.userModel.findOne({ where: { id: userId } });
+    if (!foundUser) throw new NotFoundException(`User not found`);
+
+    return foundUser;
+  }
+
   async findUserByEmail(email: string) {
     const user = await this.userModel.findOne({ where: { email: email } });
 

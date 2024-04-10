@@ -1,5 +1,6 @@
 import { UsersService } from './users.service';
 import { SignUpDto } from './dtos/sing.up.dto';
+import { SignedUser } from 'src/auth/user.interface';
 export declare class UsersController {
     private readonly usersService;
     constructor(usersService: UsersService);
@@ -15,4 +16,5 @@ export declare class UsersController {
         email: string;
         hashedPass: string;
     }>;
+    findAllUsers(signedUser: SignedUser): Promise<import("./entities/users.entity").Users[]>;
 }

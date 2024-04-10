@@ -9,20 +9,10 @@ export const UsersSignUp = CreateUserApiOperation(
   '"Sign Up" - Create an account',
 );
 
-export const UsersUploadimage = CreateUserApiOperation(
-  '"Upload profile image" - for signed User',
+export const UsersFindAll = CreateUserApiOperation(
+  '"Find all users" - for Signed User',
 );
 
 export const UsersChangePassByAdmin = CreateUserApiOperation(
   '"Change Pass By Admin" - for signed User',
-);
-
-export const UserseditProfile = CreateUserApiOperation(
-  '"Edit Profile" - for signed User',
-);
-
-export const UsersFindUser = CreateUserApiOperation('"Find User account" ');
-
-export const UsersDelete = CreateUserApiOperation(
-  '"Delete User account" - required  permission for {manageWorkers: true}',
 );

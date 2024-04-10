@@ -17,6 +17,8 @@ export declare class UsersService {
         email: string;
         hashedPass: string;
     }>;
+    findAllUsers(signedUser: string): Promise<Users[]>;
+    findUserById(userId: string): Promise<Users>;
     findUserByEmail(email: string): Promise<Users>;
     comparePasswords(password: string, hashedPassword: string): Promise<boolean>;
     generateJwtToken(userId: string, firstName: string): Promise<string>;

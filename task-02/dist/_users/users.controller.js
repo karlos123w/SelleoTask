@@ -19,12 +19,17 @@ const sing_up_dto_1 = require("./dtos/sing.up.dto");
 const sing_in_swagger_1 = require("./swagger/sing.in.swagger");
 const users_titles_swagger_1 = require("./swagger/titles/users.titles.swagger");
 const swagger_1 = require("@nestjs/swagger");
+const get_user_decorator_1 = require("../auth/get.user.decorator");
+const find_all_swagger_1 = require("./swagger/find.all.swagger");
 let UsersController = class UsersController {
     constructor(usersService) {
         this.usersService = usersService;
     }
     async signUp(signUpDto) {
         return await this.usersService.signUp(signUpDto);
+    }
+    async findAllUsers(signedUser) {
+        return await this.usersService.findAllUsers(signedUser.id);
     }
 };
 exports.UsersController = UsersController;
@@ -37,6 +42,15 @@ __decorate([
     __metadata("design:paramtypes", [sing_up_dto_1.SignUpDto]),
     __metadata("design:returntype", Promise)
 ], UsersController.prototype, "signUp", null);
+__decorate([
+    (0, common_1.Get)('all'),
+    find_all_swagger_1.SwaggerForFindAllUsers,
+    users_titles_swagger_1.UsersFindAll,
+    __param(0, (0, get_user_decorator_1.GetUser)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], UsersController.prototype, "findAllUsers", null);
 exports.UsersController = UsersController = __decorate([
     (0, common_1.Controller)('users'),
     (0, swagger_1.ApiTags)('Users'),

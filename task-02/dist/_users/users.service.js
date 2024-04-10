@@ -45,6 +45,19 @@ let UsersService = class UsersService {
             token,
         };
     }
+    async findAllUsers(signedUser) {
+        await this.findUserById(signedUser);
+        const foundAllUsers = await this.userModel.find();
+        if (!foundAllUsers)
+            return [];
+        return foundAllUsers;
+    }
+    async findUserById(userId) {
+        const foundUser = await this.userModel.findOne({ where: { id: userId } });
+        if (!foundUser)
+            throw new common_1.NotFoundException(`User not found`);
+        return foundUser;
+    }
     async findUserByEmail(email) {
         const user = await this.userModel.findOne({ where: { email: email } });
         if (!user)
