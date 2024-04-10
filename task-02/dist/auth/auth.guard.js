@@ -19,7 +19,7 @@ let AuthGuard = class AuthGuard {
     }
     async canActivate(context) {
         const request = context.switchToHttp().getRequest();
-        const isLoginEndPoint = request.route.path === `/auth/login`;
+        const isLoginEndPoint = request.route.path === `/auth/signIn`;
         const isCreateUserEndpoint = request.route.path === `/users/signUp`;
         if (isCreateUserEndpoint || isLoginEndPoint) {
             return true;

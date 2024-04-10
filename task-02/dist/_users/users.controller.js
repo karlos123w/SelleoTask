@@ -16,6 +16,9 @@ exports.UsersController = void 0;
 const common_1 = require("@nestjs/common");
 const users_service_1 = require("./users.service");
 const sing_up_dto_1 = require("./dtos/sing.up.dto");
+const sing_in_swagger_1 = require("./swagger/sing.in.swagger");
+const users_titles_swagger_1 = require("./swagger/titles/users.titles.swagger");
+const swagger_1 = require("@nestjs/swagger");
 let UsersController = class UsersController {
     constructor(usersService) {
         this.usersService = usersService;
@@ -27,6 +30,8 @@ let UsersController = class UsersController {
 exports.UsersController = UsersController;
 __decorate([
     (0, common_1.Post)('signUp'),
+    sing_in_swagger_1.SwaggerForCreateUser,
+    users_titles_swagger_1.UsersSignUp,
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [sing_up_dto_1.SignUpDto]),
@@ -34,6 +39,7 @@ __decorate([
 ], UsersController.prototype, "signUp", null);
 exports.UsersController = UsersController = __decorate([
     (0, common_1.Controller)('users'),
+    (0, swagger_1.ApiTags)('Users'),
     __metadata("design:paramtypes", [users_service_1.UsersService])
 ], UsersController);
 //# sourceMappingURL=users.controller.js.map

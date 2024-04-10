@@ -31,7 +31,7 @@ let UsersService = class UsersService {
             where: { email: signUpDto.email },
         });
         if (foundUser)
-            throw new common_1.ForbiddenException(`Użytkownik z takim email'em już istnieje`);
+            throw new common_1.ForbiddenException(`User with that email already exist`);
         const hashedPassword = await this.hashPassword(signUpDto.pass);
         const registeredUser = this.userModel.create({
             ...signUpDto,

@@ -27,7 +27,7 @@ export class UsersService {
       where: { email: signUpDto.email },
     });
     if (foundUser)
-      throw new ForbiddenException(`Użytkownik z takim email'em już istnieje`);
+      throw new ForbiddenException(`User with that email already exist`);
 
     const hashedPassword = await this.hashPassword(signUpDto.pass);
 

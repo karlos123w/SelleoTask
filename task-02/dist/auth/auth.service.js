@@ -20,7 +20,7 @@ let AuthService = class AuthService {
         const user = await this.usersService.findUserByEmail(signInDto.email);
         const PasswordMatch = await this.usersService.comparePasswords(signInDto.pass, user.hashedPass);
         if (!PasswordMatch)
-            throw new common_1.UnauthorizedException(`Nieprawidłowy kod QR`);
+            throw new common_1.UnauthorizedException(`Incorrect password`);
         const token = await this.usersService.generateJwtToken(user.id, user.firstName);
         return {
             ...user,

@@ -3,7 +3,6 @@ import { SignInDto } from './dtos/sign.in.dto';
 export declare class AuthService {
     private readonly usersService;
     constructor(usersService: UsersService);
-    Ū: any;
     signIn(signInDto: SignInDto): Promise<{
         token: string;
         id: string;

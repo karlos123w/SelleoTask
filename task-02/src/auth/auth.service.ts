@@ -5,7 +5,6 @@ import { SignInDto } from './dtos/sign.in.dto';
 @Injectable()
 export class AuthService {
   constructor(private readonly usersService: UsersService) {}
-  Ū;
 
   async signIn(signInDto: SignInDto) {
     const user = await this.usersService.findUserByEmail(signInDto.email);
@@ -15,7 +14,7 @@ export class AuthService {
       user.hashedPass,
     );
 
-    if (!PasswordMatch) throw new UnauthorizedException(`Nieprawidłowy kod QR`);
+    if (!PasswordMatch) throw new UnauthorizedException(`Incorrect password`);
     const token = await this.usersService.generateJwtToken(
       user.id,
       user.firstName,
