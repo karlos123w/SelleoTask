@@ -8,7 +8,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Users } from './entities/users.entity';
 import * as bcrypt from 'bcrypt';
-import { jwtConstants } from 'src/auth/constants';
+import { jwtConstants } from '../auth/constants';
 import * as jwt from 'jsonwebtoken';
 import { SignUpDto } from 'src/_users/dtos/sing.up.dto';
 

@@ -1,5 +1,5 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { UsersService } from 'src/_users/users.service';
+import { UsersService } from '../_users/users.service';
 import { SignInDto } from './dtos/sign.in.dto';
 
 @Injectable()

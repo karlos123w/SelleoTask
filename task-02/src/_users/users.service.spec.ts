@@ -2,7 +2,11 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { UsersService } from './users.service';
 import axios from 'axios';
 import { ForbiddenException, NotFoundException } from '@nestjs/common';
-import { SignUpDto } from './dtos/sing.up.dto';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { Users } from './entities/users.entity';
+import { UsersModule } from './users.module';
+import { getRepositoryToken } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
 jest.mock('axios');
 
@@ -12,7 +16,22 @@ describe('UsersService', () => {
   beforeEach(async () => {
     jest.resetAllMocks();
     const module: TestingModule = await Test.createTestingModule({
-      providers: [UsersService],
+      imports: [
+        UsersModule,
+        TypeOrmModule.forRoot({
+          type: 'sqlite',
+          database: ':memory:',
+          entities: [Users],
+          synchronize: true,
+        }),
+      ],
+      providers: [
+        UsersService,
+        {
+          provide: getRepositoryToken(Users),
+          useClass: Repository,
+        },
+      ],
     }).compile();
 
     service = module.get<UsersService>(UsersService);
@@ -29,17 +48,13 @@ describe('UsersService', () => {
     };
 
     const mockData = {
-      id: '1',
       firstName: 'User 1',
       email: 'user@gmail.com',
-      hashedPass: '12sbdt38dy3',
-      createdAt:
-        'Wed Apr 10 2024 00:20:33 GMT+0200 (Central European Summer Time)',
       lastName: 'Wilkowski',
       phoneNumber: 123456789,
       shirtSize: 34,
       preferredTechnology: 'Node',
-      token: '',
+      id: '1',
     };
     it('should sign Up an user and create user object', async () => {
       (axios.post as jest.Mock).mockResolvedValueOnce({ data: mockData });
@@ -62,39 +77,41 @@ describe('UsersService', () => {
   describe('findAllUsers', () => {
     const mockUsers = [
       {
-        id: '1',
-        firstName: 'User 1',
-        email: 'user@gmail.com',
-        hashedPass: '12sbdt38dy3',
-        createdAt:
-          'Wed Apr 10 2024 00:20:33 GMT+0200 (Central European Summer Time)',
-        lastName: 'Wilkowski',
-        phoneNumber: 123456789,
-        shirtSize: 34,
-        preferredTechnology: 'Node',
-        token: '',
+        // id: '1',
+        // firstName: 'User 1',
+        email: 'dawko@wp.pl	',
+        // hashedPass: '12sbdt38dy3',
+        // createdAt:
+        //   'Wed Apr 10 2024 00:20:33 GMT+0200 (Central European Summer Time)',
+        // lastName: 'Wilkowski',
+        // phoneNumber: 123456789,
+        // shirtSize: 34,
+        // preferredTechnology: 'Node',
+        // token: '',
       },
     ];
     const mockedSignedUser = {
       id: {
-        id: '1',
-        firstName: 'User 1',
-        email: 'user@gmail.com',
-        hashedPass: '12sbdt38dy3',
+        id: '2',
+        firstName: 'Konek',
+        email: 'jonek@wp.pl	',
+        hashedPass:
+          '$2b$10$SBFv1nHkafbZE5p7vbtpHO1ffGmH6PD3WD9bpysKxqtlm6qyhKN9K	',
         createdAt:
-          'Wed Apr 10 2024 00:20:33 GMT+0200 (Central European Summer Time)',
-        lastName: 'Wilkowski',
-        phoneNumber: 123456789,
+          'Wed Apr 10 2024 04:52:55 GMT+0200 (Central European Summer Time)',
+        lastName: 'Kowal',
+        phoneNumber: 987654321,
         shirtSize: 34,
-        preferredTechnology: 'Node',
-        token: '',
+        preferredTechnology: 'Java',
+        token:
+          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImZpcnN0TmFtZSI6IlVzZXIgMSIsImlhdCI6MTcxMjczMTc4OCwiZXhwIjoxNzEyODE4MTg4fQ.gGwPmr-VPaQR0E1p-u86WV1ppnsVZntESWsGryvF8B0',
         expiration: 1,
       },
     };
     it('should return all users for signedUser', async () => {
       (axios.get as jest.Mock).mockResolvedValueOnce({ data: mockUsers });
 
-      const result = await service.findAllUsers(mockedSignedUser.id.id);
+      const result = await service.findAllUsers('2');
       expect(result).toEqual(mockUsers);
     });
 

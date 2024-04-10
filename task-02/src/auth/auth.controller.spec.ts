@@ -1,6 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
+import { UsersModule } from '../_users/users.module';
+import { Users } from '../_users/entities/users.entity';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
 describe('AuthController', () => {
   let controller: AuthController;
@@ -9,9 +12,19 @@ describe('AuthController', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
+      imports: [
+        UsersModule,
+        TypeOrmModule.forRoot({
+          type: 'sqlite',
+          database: ':memory:',
+          entities: [Users],
+          synchronize: true,
+        }),
+      ],
       controllers: [AuthController],
       providers: [
         AuthService,
+        UsersModule,
         {
           provide: 'CACHE_MANAGER',
           useValue: {

@@ -1,6 +1,6 @@
 import { UsersService } from './users.service';
 import { SignUpDto } from './dtos/sing.up.dto';
-import { SignedUser } from 'src/auth/user.interface';
+import { SignedUser } from '../auth/user.interface';
 export declare class UsersController {
     private readonly usersService;
     constructor(usersService: UsersService);

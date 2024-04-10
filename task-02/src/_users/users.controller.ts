@@ -7,8 +7,8 @@ import {
   UsersSignUp,
 } from './swagger/titles/users.titles.swagger';
 import { ApiTags } from '@nestjs/swagger';
-import { GetUser } from 'src/auth/get.user.decorator';
-import { SignedUser } from 'src/auth/user.interface';
+import { GetUser } from '../auth/get.user.decorator';
+import { SignedUser } from '../auth/user.interface';
 import { SwaggerForFindAllUsers } from './swagger/find.all.swagger';
 
 @Controller('users')

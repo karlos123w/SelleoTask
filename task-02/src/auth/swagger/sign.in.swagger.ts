@@ -1,5 +1,5 @@
 import { ApiResponse } from '@nestjs/swagger';
-import { Users } from 'src/_users/entities/users.entity';
+import { Users } from '../../_users/entities/users.entity';
 
 export function CombineSwaggerResponses(...responses: MethodDecorator[]) {
   return function (
