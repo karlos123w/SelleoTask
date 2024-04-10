@@ -6,4 +6,5 @@ export declare class SignUpDto {
     phoneNumber: number;
     shirtSize: number;
     preferredTechnology: string;
+    role: string;
 }

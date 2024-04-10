@@ -58,4 +58,12 @@ export class SignUpDto {
   @IsNotEmpty()
   @IsString()
   preferredTechnology: string;
+
+  @ApiProperty({
+    description: 'Users role',
+    example: 'admin',
+  })
+  @IsNotEmpty()
+  @IsString()
+  role: string;
 }

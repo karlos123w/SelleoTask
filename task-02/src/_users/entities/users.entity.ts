@@ -38,4 +38,8 @@ export class Users {
   @Column()
   @ApiProperty({ description: 'Users hashed password' })
   hashedPass: string;
+
+  @Column({ default: false })
+  @ApiProperty({ description: 'role of user' })
+  role: string;
 }

@@ -14,6 +14,7 @@ export declare class AuthService {
         createdAt: string;
         email: string;
         hashedPass: string;
+        role: string;
     }>;
     refreshAuthToken(userId: string): Promise<string>;
 }

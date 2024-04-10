@@ -14,5 +14,6 @@ export declare class AuthController {
         createdAt: string;
         email: string;
         hashedPass: string;
+        role: string;
     }>;
 }

@@ -1,6 +1,7 @@
 import {
   BadRequestException,
   ConflictException,
+  ForbiddenException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -8,13 +9,12 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Users } from './entities/users.entity';
 import * as bcrypt from 'bcrypt';
-import { jwtConstants } from '../auth/constants';
 import * as jwt from 'jsonwebtoken';
 import { SignUpDto } from 'src/_users/dtos/sing.up.dto';
 
 @Injectable()
 export class UsersService {
-  private readonly jwtSecretKey = jwtConstants.secret;
+  private readonly jwtSecretKey = process.env.AUTH_SECRET;
 
   constructor(
     @InjectRepository(Users)
@@ -37,12 +37,14 @@ export class UsersService {
       hashedPass: hashedPassword,
     });
 
-    await this.userModel.save(registeredUser);
+    console.log(process.env.AUTH_SECRET);
 
     const token = await this.generateJwtToken(
       registeredUser.id,
       registeredUser.firstName,
     );
+
+    await this.userModel.save(registeredUser);
 
     return {
       ...registeredUser,
@@ -72,6 +74,23 @@ export class UsersService {
     if (!user) throw new NotFoundException(`User with that email not found`);
 
     return user;
+  }
+
+  async findAdmin(userId: string) {
+    const foundAdmin = await this.userModel.findOne({
+      where: {
+        id: userId,
+        role: 'admin',
+      },
+    });
+    if (!foundAdmin)
+      throw new ForbiddenException(
+        'To execute this command you must have the admin role',
+      );
+
+    console.log('admin zanaleziony');
+
+    return foundAdmin;
   }
 
   async comparePasswords(

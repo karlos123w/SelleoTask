@@ -15,6 +15,7 @@ export declare class UsersController {
         createdAt: string;
         email: string;
         hashedPass: string;
+        role: string;
     }>;
     findAllUsers(signedUser: SignedUser): Promise<import("./entities/users.entity").Users[]>;
 }

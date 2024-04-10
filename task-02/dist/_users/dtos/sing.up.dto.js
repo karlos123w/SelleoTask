@@ -79,4 +79,13 @@ __decorate([
     (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
 ], SignUpDto.prototype, "preferredTechnology", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({
+        description: 'Users role',
+        example: 'admin',
+    }),
+    (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], SignUpDto.prototype, "role", void 0);
 //# sourceMappingURL=sing.up.dto.js.map

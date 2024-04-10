@@ -8,4 +8,5 @@ export declare class Users {
     createdAt: string;
     email: string;
     hashedPass: string;
+    role: string;
 }

@@ -18,12 +18,11 @@ const typeorm_1 = require("@nestjs/typeorm");
 const typeorm_2 = require("typeorm");
 const users_entity_1 = require("./entities/users.entity");
 const bcrypt = require("bcrypt");
-const constants_1 = require("../auth/constants");
 const jwt = require("jsonwebtoken");
 let UsersService = class UsersService {
     constructor(userModel) {
         this.userModel = userModel;
-        this.jwtSecretKey = constants_1.jwtConstants.secret;
+        this.jwtSecretKey = process.env.AUTH_SECRET;
     }
     async signUp(signUpDto) {
         const newDate = new Date().toString();
@@ -38,8 +37,9 @@ let UsersService = class UsersService {
             createdAt: newDate,
             hashedPass: hashedPassword,
         });
-        await this.userModel.save(registeredUser);
+        console.log(process.env.AUTH_SECRET);
         const token = await this.generateJwtToken(registeredUser.id, registeredUser.firstName);
+        await this.userModel.save(registeredUser);
         return {
             ...registeredUser,
             token,
@@ -63,6 +63,18 @@ let UsersService = class UsersService {
         if (!user)
             throw new common_1.NotFoundException(`User with that email not found`);
         return user;
+    }
+    async findAdmin(userId) {
+        const foundAdmin = await this.userModel.findOne({
+            where: {
+                id: userId,
+                role: 'admin',
+            },
+        });
+        if (!foundAdmin)
+            throw new common_1.ForbiddenException('To execute this command you must have the admin role');
+        console.log('admin zanaleziony');
+        return foundAdmin;
     }
     async comparePasswords(password, hashedPassword) {
         return await bcrypt.compare(password, hashedPassword);
