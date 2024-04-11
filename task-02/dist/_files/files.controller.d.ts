@@ -19,4 +19,5 @@ export declare class FilesController {
             size: number;
         }[];
     }[]>;
+    displaContentOfFile(dirname: string, fileName: string): Promise<any>;
 }

@@ -1,3 +1,5 @@
+/// <reference types="express-serve-static-core" />
+/// <reference types="multer" />
 interface FileDetails {
     name: string;
     size: number;

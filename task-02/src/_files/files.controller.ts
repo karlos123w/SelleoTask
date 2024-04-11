@@ -44,4 +44,11 @@ export class FilesController {
     return await this.filesService.findAllFiles(signedUser.id);
   }
 
+  @Get(':dirname/display-content/:fileName')
+  async displaContentOfFile(
+    @Param('dirname') dirname: string,
+    @Param('fileName') fileName: string,
+  ) {
+    return await this.filesService.displayContent(dirname, fileName);
+  }
 }

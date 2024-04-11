@@ -84,6 +84,17 @@ let FilesService = class FilesService {
         }
         return directories;
     }
+    async displayContent(dirname, fileName) {
+        const path = `./uploads/${dirname}/${fileName}`;
+        try {
+            const content = await fs.readFile(path, 'utf-8');
+            return content;
+        }
+        catch (error) {
+            console.error('Error reading file:', error);
+            throw new common_1.NotFoundException(`File: ${fileName} not found in dir: ${dirname}`);
+        }
+    }
 };
 exports.FilesService = FilesService;
 exports.FilesService = FilesService = __decorate([

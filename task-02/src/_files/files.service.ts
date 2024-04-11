@@ -2,6 +2,7 @@ import {
   BadRequestException,
   ConflictException,
   Injectable,
+  NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Files } from './entities/file.entity';
@@ -93,5 +94,21 @@ export class FilesService {
     }
 
     return directories;
+  }
+
+  async displayContent(dirname: string, fileName: string) {
+    // zabezpieczyć dla czytania foldru admin tylko dla amdina
+    const path = `./uploads/${dirname}/${fileName}`;
+
+    try {
+      const content = await fs.readFile(path, 'utf-8');
+
+      return content;
+    } catch (error) {
+      console.error('Error reading file:', error);
+      throw new NotFoundException(
+        `File: ${fileName} not found in dir: ${dirname}`,
+      );
+    }
   }
 }
