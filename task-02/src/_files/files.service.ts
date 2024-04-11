@@ -4,9 +4,6 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Files } from './entities/file.entity';
-import { Repository } from 'typeorm';
 import { FileHelper } from '../helpers/file.helper';
 import { UsersService } from '../_users/users.service';
 import { MulterError, diskStorage } from 'multer';
@@ -24,11 +21,7 @@ const storage = diskStorage({
 export const upload = multer({ storage });
 @Injectable()
 export class FilesService {
-  constructor(
-    @InjectRepository(Files)
-    private filesModel: Repository<Files>,
-    private readonly usersService: UsersService,
-  ) {}
+  constructor(private readonly usersService: UsersService) {}
 
   async createDirectory(dirname: string, signedUser: string) {
     await this.usersService.findAdmin(signedUser);

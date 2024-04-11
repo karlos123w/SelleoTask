@@ -8,15 +8,9 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var __param = (this && this.__param) || function (paramIndex, decorator) {
-    return function (target, key) { decorator(target, key, paramIndex); }
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.FilesService = exports.upload = void 0;
 const common_1 = require("@nestjs/common");
-const typeorm_1 = require("@nestjs/typeorm");
-const file_entity_1 = require("./entities/file.entity");
-const typeorm_2 = require("typeorm");
 const file_helper_1 = require("../helpers/file.helper");
 const users_service_1 = require("../_users/users.service");
 const multer_1 = require("multer");
@@ -31,8 +25,7 @@ const storage = (0, multer_1.diskStorage)({
 });
 exports.upload = multer({ storage });
 let FilesService = class FilesService {
-    constructor(filesModel, usersService) {
-        this.filesModel = filesModel;
+    constructor(usersService) {
         this.usersService = usersService;
     }
     async createDirectory(dirname, signedUser) {
@@ -107,8 +100,6 @@ let FilesService = class FilesService {
 exports.FilesService = FilesService;
 exports.FilesService = FilesService = __decorate([
     (0, common_1.Injectable)(),
-    __param(0, (0, typeorm_1.InjectRepository)(file_entity_1.Files)),
-    __metadata("design:paramtypes", [typeorm_2.Repository,
-        users_service_1.UsersService])
+    __metadata("design:paramtypes", [users_service_1.UsersService])
 ], FilesService);
 //# sourceMappingURL=files.service.js.map

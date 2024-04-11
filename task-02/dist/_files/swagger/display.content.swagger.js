@@ -18,19 +18,14 @@ exports.SwaggerForDisplayContent = CombineSwaggerResponses((0, swagger_1.ApiResp
             schema: {
                 type: 'object',
                 properties: {
-                    dirname: { type: 'string' },
-                    files: {
-                        type: 'array',
-                        items: {
-                            type: 'object',
-                            properties: {
-                                name: { type: 'string' },
-                                size: { type: 'number' },
-                                mimeType: { type: 'string' },
-                            },
-                        },
-                    },
+                    file: { type: 'string' },
+                    fileName: { type: 'string' },
+                    fileSize: { type: 'number' },
+                    mimeType: { type: 'string' },
                 },
+            },
+            example: {
+                file: '%PDF-1.4\n% ����\n3\n0\nobj\n<< /Type /Catalog /Names...',
             },
         },
     },
