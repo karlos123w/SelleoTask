@@ -84,7 +84,11 @@ let FilesService = class FilesService {
         }
         return directories;
     }
-    async displayContent(dirname, fileName) {
+    async displayContent(dirname, fileName, signedUser) {
+        const isAdmin = await this.usersService.isAdmin(signedUser);
+        if (!isAdmin && dirname === 'admin') {
+            throw new common_1.BadRequestException('Access to files in the (admin) folder is only for admins');
+        }
         const path = `./uploads/${dirname}/${fileName}`;
         try {
             const content = await fs.readFile(path, 'utf-8');

@@ -34,8 +34,8 @@ let FilesController = class FilesController {
     async findAllFiles(signedUser) {
         return await this.filesService.findAllFiles(signedUser.id);
     }
-    async displaContentOfFile(dirname, fileName) {
-        return await this.filesService.displayContent(dirname, fileName);
+    async displaContentOfFile(dirname, fileName, signedUser) {
+        return await this.filesService.displayContent(dirname, fileName, signedUser.id);
     }
 };
 exports.FilesController = FilesController;
@@ -74,8 +74,9 @@ __decorate([
     (0, common_1.Get)(':dirname/display-content/:fileName'),
     __param(0, (0, common_1.Param)('dirname')),
     __param(1, (0, common_1.Param)('fileName')),
+    __param(2, (0, get_user_decorator_1.GetUser)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, String]),
+    __metadata("design:paramtypes", [String, String, Object]),
     __metadata("design:returntype", Promise)
 ], FilesController.prototype, "displaContentOfFile", null);
 exports.FilesController = FilesController = __decorate([

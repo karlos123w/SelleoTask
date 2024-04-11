@@ -96,8 +96,14 @@ export class FilesService {
     return directories;
   }
 
-  async displayContent(dirname: string, fileName: string) {
-    // zabezpieczyć dla czytania foldru admin tylko dla amdina
+  async displayContent(dirname: string, fileName: string, signedUser: string) {
+    const isAdmin = await this.usersService.isAdmin(signedUser);
+
+    if (!isAdmin && dirname === 'admin') {
+      throw new BadRequestException(
+        'Access to files in the (admin) folder is only for admins',
+      );
+    }
     const path = `./uploads/${dirname}/${fileName}`;
 
     try {

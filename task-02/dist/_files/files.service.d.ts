@@ -22,5 +22,5 @@ export declare class FilesService {
             size: number;
         }[];
     }[]>;
-    displayContent(dirname: string, fileName: string): Promise<any>;
+    displayContent(dirname: string, fileName: string, signedUser: string): Promise<any>;
 }
