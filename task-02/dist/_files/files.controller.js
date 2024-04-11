@@ -31,6 +31,9 @@ let FilesController = class FilesController {
     async findAllFolders(signedUser) {
         return await this.filesService.findAllFolders(signedUser.id);
     }
+    async findAllFiles(signedUser) {
+        return await this.filesService.findAllFiles(signedUser.id);
+    }
 };
 exports.FilesController = FilesController;
 __decorate([
@@ -57,6 +60,13 @@ __decorate([
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], FilesController.prototype, "findAllFolders", null);
+__decorate([
+    (0, common_1.Get)('find-files'),
+    __param(0, (0, get_user_decorator_1.GetUser)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], FilesController.prototype, "findAllFiles", null);
 exports.FilesController = FilesController = __decorate([
     (0, common_1.Controller)('files'),
     (0, swagger_1.ApiTags)('files'),

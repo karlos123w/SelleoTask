@@ -35,6 +35,34 @@ const getAllFolders = async (path, isAdmin) => {
     }
     return folders;
 };
+const getAllFilesWithDetails = async (path) => {
+    const files = [];
+    try {
+        const entries = await fs.readdir(path, { withFileTypes: true });
+        for (const entry of entries) {
+            if (entry.isFile()) {
+                const fullPath = `${path}/${entry.name}`;
+                const stats = await fs.stat(fullPath);
+                files.push({
+                    name: entry.name,
+                    size: stats.size,
+                });
+            }
+            else if (entry.isDirectory()) {
+                const subPath = `${path}/${entry.name}`;
+                const subFiles = await getAllFilesWithDetails(subPath);
+                files.push(...subFiles.map((file) => ({
+                    ...file,
+                    name: `${entry.name}/${file.name}`,
+                })));
+            }
+        }
+    }
+    catch (error) {
+        console.error('Error reading directory:', error);
+    }
+    return files;
+};
 const removeFile = (path) => {
     let resoult = true;
     fs.unlink(path, (err) => {
@@ -54,5 +82,6 @@ exports.FileHelper = {
     getFileExtension,
     removeFile,
     getAllFolders,
+    getAllFilesWithDetails,
 };
 //# sourceMappingURL=file.helper.js.map

@@ -15,4 +15,11 @@ export declare class FilesService {
         message: string;
         filename: string;
     }>;
+    findAllFiles(signedUser: string): Promise<{
+        dirname: any;
+        files: {
+            name: string;
+            size: number;
+        }[];
+    }[]>;
 }

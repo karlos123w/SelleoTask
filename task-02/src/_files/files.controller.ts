@@ -38,4 +38,10 @@ export class FilesController {
   async findAllFolders(@GetUser() signedUser: SignedUser) {
     return await this.filesService.findAllFolders(signedUser.id);
   }
+
+  @Get('find-files')
+  async findAllFiles(@GetUser() signedUser: SignedUser) {
+    return await this.filesService.findAllFiles(signedUser.id);
+  }
+
 }

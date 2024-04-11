@@ -8,6 +8,11 @@ const createFolder = (path: string) => {
   fs.mkdir(path, { recursive: true });
 };
 
+interface FileDetails {
+  name: string;
+  size: number;
+}
+
 const getFileExtension = (
   file: Express.Multer.File,
   extensionOnError?: string,
@@ -44,6 +49,38 @@ const getAllFolders = async (
   return folders;
 };
 
+const getAllFilesWithDetails = async (path: string): Promise<FileDetails[]> => {
+  const files: FileDetails[] = [];
+
+  try {
+    const entries = await fs.readdir(path, { withFileTypes: true });
+
+    for (const entry of entries) {
+      if (entry.isFile()) {
+        const fullPath = `${path}/${entry.name}`;
+        const stats = await fs.stat(fullPath);
+        files.push({
+          name: entry.name,
+          size: stats.size,
+        });
+      } else if (entry.isDirectory()) {
+        const subPath = `${path}/${entry.name}`;
+        const subFiles = await getAllFilesWithDetails(subPath);
+        files.push(
+          ...subFiles.map((file) => ({
+            ...file,
+            name: `${entry.name}/${file.name}`,
+          })),
+        );
+      }
+    }
+  } catch (error) {
+    console.error('Error reading directory:', error);
+  }
+
+  return files;
+};
+
 const removeFile = (path: string): boolean => {
   let resoult = true;
 
@@ -65,4 +102,5 @@ export const FileHelper = {
   getFileExtension,
   removeFile,
   getAllFolders,
+  getAllFilesWithDetails,
 };

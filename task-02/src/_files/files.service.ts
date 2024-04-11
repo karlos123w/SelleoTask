@@ -72,4 +72,26 @@ export class FilesService {
       throw new BadRequestException('Error saving file');
     }
   }
+
+  async findAllFiles(signedUser: string) {
+    const foundFolders = await this.findAllFolders(signedUser);
+    if (!foundFolders) return [];
+
+    type File = { name: string; size: number };
+    type Dir = { dirname; files: File[] };
+
+    const directories: Dir[] = [];
+    for (const singleDirPath of foundFolders) {
+      const filesInDir: File[] = [];
+
+      const foundFiles = await FileHelper.getAllFilesWithDetails(singleDirPath);
+
+      foundFiles.forEach((singleFile) => {
+        filesInDir.push({ name: singleFile.name, size: singleFile.size });
+      });
+      directories.push({ dirname: singleDirPath, files: filesInDir });
+    }
+
+    return directories;
+  }
 }

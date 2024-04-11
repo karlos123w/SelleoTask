@@ -12,4 +12,11 @@ export declare class FilesController {
         filename: string;
     }>;
     findAllFolders(signedUser: SignedUser): Promise<string[]>;
+    findAllFiles(signedUser: SignedUser): Promise<{
+        dirname: any;
+        files: {
+            name: string;
+            size: number;
+        }[];
+    }[]>;
 }
