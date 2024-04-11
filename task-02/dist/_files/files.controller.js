@@ -17,6 +17,7 @@ const common_1 = require("@nestjs/common");
 const swagger_1 = require("@nestjs/swagger");
 const files_service_1 = require("./files.service");
 const get_user_decorator_1 = require("../auth/get.user.decorator");
+const platform_express_1 = require("@nestjs/platform-express");
 let FilesController = class FilesController {
     constructor(filesService) {
         this.filesService = filesService;
@@ -24,8 +25,11 @@ let FilesController = class FilesController {
     async createFolder(folderName, signedUser) {
         return await this.filesService.createFolder(folderName, signedUser.id);
     }
-    async findAllFolders() {
-        return await this.filesService.findAllFolders();
+    async addFileToFolder(file, folderName) {
+        return await this.filesService.addFileToFolder(folderName, file);
+    }
+    async findAllFolders(signedUser) {
+        return await this.filesService.findAllFolders(signedUser.id);
     }
 };
 exports.FilesController = FilesController;
@@ -38,9 +42,19 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], FilesController.prototype, "createFolder", null);
 __decorate([
-    (0, common_1.Get)('find-folders'),
+    (0, common_1.Post)(':folderName/add-file'),
+    (0, common_1.UseInterceptors)((0, platform_express_1.FileInterceptor)('file')),
+    __param(0, (0, common_1.UploadedFile)()),
+    __param(1, (0, common_1.Param)('folderName')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
+    __metadata("design:paramtypes", [Object, String]),
+    __metadata("design:returntype", Promise)
+], FilesController.prototype, "addFileToFolder", null);
+__decorate([
+    (0, common_1.Get)('find-folders'),
+    __param(0, (0, get_user_decorator_1.GetUser)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], FilesController.prototype, "findAllFolders", null);
 exports.FilesController = FilesController = __decorate([

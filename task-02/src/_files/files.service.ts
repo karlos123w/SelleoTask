@@ -1,14 +1,26 @@
 import {
+  BadRequestException,
   ConflictException,
-  ForbiddenException,
   Injectable,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Files } from './entities/file.entity';
 import { Repository } from 'typeorm';
-import { FileHelper } from 'src/helpers/file.helper';
-import { UsersService } from 'src/_users/users.service';
+import { FileHelper } from '../helpers/file.helper';
+import { UsersService } from '../_users/users.service';
+import { MulterError, diskStorage } from 'multer';
+import * as multer from 'multer';
+import * as fs from 'fs-extra';
 
+const storage = diskStorage({
+  destination: './uploads',
+  filename: (req, file, cb) => {
+    const filename = `${Date.now()}-${file.originalname}`;
+    cb(null, filename);
+  },
+});
+
+export const upload = multer({ storage });
 @Injectable()
 export class FilesService {
   constructor(
@@ -29,10 +41,35 @@ export class FilesService {
     return { message: 'Folder created ' };
   }
 
-  async findAllFolders() {
+  async findAllFolders(signedUser: string) {
     const path = './uploads';
-    const foundAllFolders = FileHelper.getAllFolders(path);
+
+    const isAdmin = await this.usersService.isAdmin(signedUser);
+
+    const foundAllFolders = await FileHelper.getAllFolders(path, isAdmin);
 
     return foundAllFolders;
+  }
+
+  async addFileToFolder(folderName: string, file: Express.Multer.File) {
+    const path = `./uploads/${folderName}`;
+
+    if (!FileHelper.checkIfFolderExist(path)) {
+      throw new ConflictException('Folder to save file not found');
+    }
+
+    try {
+      if (file instanceof MulterError) {
+        throw new BadRequestException(file.message);
+      }
+
+      const filename = `${Date.now()}-${file.originalname}`;
+      await fs.writeFile(`${path}/${filename}`, file.buffer);
+
+      return { message: 'File uploaded successfully', filename: filename };
+    } catch (error) {
+      console.error('Error uploading file:', error);
+      throw new BadRequestException('Error saving file');
+    }
   }
 }

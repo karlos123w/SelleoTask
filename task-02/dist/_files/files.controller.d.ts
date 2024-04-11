@@ -1,3 +1,4 @@
+/// <reference types="multer" />
 import { FilesService } from './files.service';
 import { SignedUser } from 'src/auth/user.interface';
 export declare class FilesController {
@@ -6,5 +7,9 @@ export declare class FilesController {
     createFolder(folderName: string, signedUser: SignedUser): Promise<{
         message: string;
     }>;
-    findAllFolders(): Promise<string[]>;
+    addFileToFolder(file: Express.Multer.File, folderName: string): Promise<{
+        message: string;
+        filename: string;
+    }>;
+    findAllFolders(signedUser: SignedUser): Promise<string[]>;
 }

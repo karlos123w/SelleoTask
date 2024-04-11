@@ -93,6 +93,18 @@ export class UsersService {
     return foundAdmin;
   }
 
+  async isAdmin(userId: string) {
+    const foundAdmin = await this.userModel.findOne({
+      where: {
+        id: userId,
+        role: 'admin',
+      },
+    });
+    if (!foundAdmin) return false;
+
+    return true;
+  }
+
   async comparePasswords(
     password: string,
     hashedPassword: string,

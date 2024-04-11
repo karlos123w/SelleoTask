@@ -3,5 +3,5 @@ export declare const FileHelper: {
     createFolder: (path: string) => void;
     getFileExtension: (file: Express.Multer.File, extensionOnError?: string) => string;
     removeFile: (path: string) => boolean;
-    getAllFolders: (path: string) => Promise<string[]>;
+    getAllFolders: (path: string, isAdmin: boolean) => Promise<string[]>;
 };

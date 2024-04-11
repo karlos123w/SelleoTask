@@ -16,8 +16,10 @@ const getFileExtension = (
   const value = file.originalname.split('.')[1];
   return value;
 };
-
-const getAllFolders = async (path: string): Promise<string[]> => {
+const getAllFolders = async (
+  path: string,
+  isAdmin: boolean,
+): Promise<string[]> => {
   const folders: string[] = [];
 
   try {
@@ -25,9 +27,13 @@ const getAllFolders = async (path: string): Promise<string[]> => {
 
     for (const entry of entries) {
       if (entry.isDirectory()) {
+        if (!isAdmin && entry.name === 'admin') {
+          continue;
+        }
+
         const subPath = `${path}/${entry.name}`;
         folders.push(subPath);
-        const subFolders = await getAllFolders(subPath);
+        const subFolders = await getAllFolders(subPath, isAdmin);
         folders.push(...subFolders);
       }
     }

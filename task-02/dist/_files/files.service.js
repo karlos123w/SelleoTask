@@ -12,13 +12,24 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.FilesService = void 0;
+exports.FilesService = exports.upload = void 0;
 const common_1 = require("@nestjs/common");
 const typeorm_1 = require("@nestjs/typeorm");
 const file_entity_1 = require("./entities/file.entity");
 const typeorm_2 = require("typeorm");
 const file_helper_1 = require("../helpers/file.helper");
 const users_service_1 = require("../_users/users.service");
+const multer_1 = require("multer");
+const multer = require("multer");
+const fs = require("fs-extra");
+const storage = (0, multer_1.diskStorage)({
+    destination: './uploads',
+    filename: (req, file, cb) => {
+        const filename = `${Date.now()}-${file.originalname}`;
+        cb(null, filename);
+    },
+});
+exports.upload = multer({ storage });
 let FilesService = class FilesService {
     constructor(filesModel, usersService) {
         this.filesModel = filesModel;
@@ -34,10 +45,29 @@ let FilesService = class FilesService {
             file_helper_1.FileHelper.createFolder(pathToSave);
         return { message: 'Folder created ' };
     }
-    async findAllFolders() {
+    async findAllFolders(signedUser) {
         const path = './uploads';
-        const foundAllFolders = file_helper_1.FileHelper.getAllFolders(path);
+        const isAdmin = await this.usersService.isAdmin(signedUser);
+        const foundAllFolders = await file_helper_1.FileHelper.getAllFolders(path, isAdmin);
         return foundAllFolders;
+    }
+    async addFileToFolder(folderName, file) {
+        const path = `./uploads/${folderName}`;
+        if (!file_helper_1.FileHelper.checkIfFolderExist(path)) {
+            throw new common_1.ConflictException('Folder to save file not found');
+        }
+        try {
+            if (file instanceof multer_1.MulterError) {
+                throw new common_1.BadRequestException(file.message);
+            }
+            const filename = `${Date.now()}-${file.originalname}`;
+            await fs.writeFile(`${path}/${filename}`, file.buffer);
+            return { message: 'File uploaded successfully', filename: filename };
+        }
+        catch (error) {
+            console.error('Error uploading file:', error);
+            throw new common_1.BadRequestException('Error saving file');
+        }
     }
 };
 exports.FilesService = FilesService;

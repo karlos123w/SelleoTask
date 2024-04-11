@@ -14,15 +14,18 @@ const getFileExtension = (file, extensionOnError) => {
     const value = file.originalname.split('.')[1];
     return value;
 };
-const getAllFolders = async (path) => {
+const getAllFolders = async (path, isAdmin) => {
     const folders = [];
     try {
         const entries = await fs.readdir(path, { withFileTypes: true });
         for (const entry of entries) {
             if (entry.isDirectory()) {
+                if (!isAdmin && entry.name === 'admin') {
+                    continue;
+                }
                 const subPath = `${path}/${entry.name}`;
                 folders.push(subPath);
-                const subFolders = await getAllFolders(subPath);
+                const subFolders = await getAllFolders(subPath, isAdmin);
                 folders.push(...subFolders);
             }
         }

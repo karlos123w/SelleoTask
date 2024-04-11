@@ -1,6 +1,8 @@
 import { Files } from './entities/file.entity';
 import { Repository } from 'typeorm';
-import { UsersService } from 'src/_users/users.service';
+import { UsersService } from '../_users/users.service';
+import * as multer from 'multer';
+export declare const upload: multer.Multer;
 export declare class FilesService {
     private filesModel;
     private readonly usersService;
@@ -8,5 +10,9 @@ export declare class FilesService {
     createFolder(folderName: string, signedUser: string): Promise<{
         message: string;
     }>;
-    findAllFolders(): Promise<string[]>;
+    findAllFolders(signedUser: string): Promise<string[]>;
+    addFileToFolder(folderName: string, file: Express.Multer.File): Promise<{
+        message: string;
+        filename: string;
+    }>;
 }

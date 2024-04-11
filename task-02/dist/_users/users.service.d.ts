@@ -22,6 +22,7 @@ export declare class UsersService {
     findUserById(userId: string): Promise<Users>;
     findUserByEmail(email: string): Promise<Users>;
     findAdmin(userId: string): Promise<Users>;
+    isAdmin(userId: string): Promise<boolean>;
     comparePasswords(password: string, hashedPassword: string): Promise<boolean>;
     generateJwtToken(userId: string, firstName: string): Promise<string>;
     hashPassword(password: string): Promise<string>;

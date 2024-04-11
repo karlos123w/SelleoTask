@@ -76,6 +76,17 @@ let UsersService = class UsersService {
         console.log('admin zanaleziony');
         return foundAdmin;
     }
+    async isAdmin(userId) {
+        const foundAdmin = await this.userModel.findOne({
+            where: {
+                id: userId,
+                role: 'admin',
+            },
+        });
+        if (!foundAdmin)
+            return false;
+        return true;
+    }
     async comparePasswords(password, hashedPassword) {
         return await bcrypt.compare(password, hashedPassword);
     }
