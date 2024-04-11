@@ -7,11 +7,11 @@ export declare class FilesService {
     private filesModel;
     private readonly usersService;
     constructor(filesModel: Repository<Files>, usersService: UsersService);
-    createFolder(folderName: string, signedUser: string): Promise<{
+    createDirectory(dirname: string, signedUser: string): Promise<{
         message: string;
     }>;
-    findAllFolders(signedUser: string): Promise<string[]>;
-    addFileToFolder(folderName: string, file: Express.Multer.File): Promise<{
+    findAllDirectories(signedUser: string): Promise<string[]>;
+    addFileToDirectory(dirname: string, file: Express.Multer.File, signedUser: string): Promise<{
         message: string;
         filename: string;
     }>;

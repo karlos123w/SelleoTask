@@ -73,7 +73,6 @@ let UsersService = class UsersService {
         });
         if (!foundAdmin)
             throw new common_1.ForbiddenException('To execute this command you must have the admin role');
-        console.log('admin zanaleziony');
         return foundAdmin;
     }
     async isAdmin(userId) {

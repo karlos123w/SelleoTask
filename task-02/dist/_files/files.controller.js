@@ -18,18 +18,24 @@ const swagger_1 = require("@nestjs/swagger");
 const files_service_1 = require("./files.service");
 const get_user_decorator_1 = require("../auth/get.user.decorator");
 const platform_express_1 = require("@nestjs/platform-express");
+const files_titles_swagger_1 = require("./swagger/titles/files.titles.swagger");
+const create_folder_swagger_1 = require("./swagger/create.folder.swagger");
+const add_file_swagger_1 = require("./swagger/add.file.swagger");
+const find_all_folders_swagger_1 = require("./swagger/find.all.folders.swagger");
+const find_all_files_swagger_1 = require("./swagger/find.all.files.swagger");
+const display_content_swagger_1 = require("./swagger/display.content.swagger");
 let FilesController = class FilesController {
     constructor(filesService) {
         this.filesService = filesService;
     }
-    async createFolder(folderName, signedUser) {
-        return await this.filesService.createFolder(folderName, signedUser.id);
+    async createDirectory(dirname, signedUser) {
+        return await this.filesService.createDirectory(dirname, signedUser.id);
     }
-    async addFileToFolder(file, folderName) {
-        return await this.filesService.addFileToFolder(folderName, file);
+    async addFileToDirectory(file, dirname, signedUser) {
+        return await this.filesService.addFileToDirectory(dirname, file, signedUser.id);
     }
-    async findAllFolders(signedUser) {
-        return await this.filesService.findAllFolders(signedUser.id);
+    async findAllDirectories(signedUser) {
+        return await this.filesService.findAllDirectories(signedUser.id);
     }
     async findAllFiles(signedUser) {
         return await this.filesService.findAllFiles(signedUser.id);
@@ -40,31 +46,40 @@ let FilesController = class FilesController {
 };
 exports.FilesController = FilesController;
 __decorate([
-    (0, common_1.Post)('create-folder/:folderName'),
-    __param(0, (0, common_1.Param)('folderName')),
+    (0, common_1.Post)('create-directory/:dirname'),
+    files_titles_swagger_1.FilesCreateFolder,
+    create_folder_swagger_1.SwaggerForCreateDirectory,
+    __param(0, (0, common_1.Param)('dirname')),
     __param(1, (0, get_user_decorator_1.GetUser)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String, Object]),
     __metadata("design:returntype", Promise)
-], FilesController.prototype, "createFolder", null);
+], FilesController.prototype, "createDirectory", null);
 __decorate([
-    (0, common_1.Post)(':folderName/add-file'),
+    (0, common_1.Post)(':dirname/add-file'),
     (0, common_1.UseInterceptors)((0, platform_express_1.FileInterceptor)('file')),
+    files_titles_swagger_1.FilesAddFile,
+    add_file_swagger_1.SwaggerForAddFile,
     __param(0, (0, common_1.UploadedFile)()),
-    __param(1, (0, common_1.Param)('folderName')),
+    __param(1, (0, common_1.Param)('dirname')),
+    __param(2, (0, get_user_decorator_1.GetUser)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, String]),
+    __metadata("design:paramtypes", [Object, String, Object]),
     __metadata("design:returntype", Promise)
-], FilesController.prototype, "addFileToFolder", null);
+], FilesController.prototype, "addFileToDirectory", null);
 __decorate([
-    (0, common_1.Get)('find-folders'),
+    (0, common_1.Get)('find-directories'),
+    files_titles_swagger_1.FilesFindAllFolder,
+    find_all_folders_swagger_1.SwaggerForFindAllFolders,
     __param(0, (0, get_user_decorator_1.GetUser)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
-], FilesController.prototype, "findAllFolders", null);
+], FilesController.prototype, "findAllDirectories", null);
 __decorate([
     (0, common_1.Get)('find-files'),
+    files_titles_swagger_1.FilesFindAllFiles,
+    find_all_files_swagger_1.SwaggerForFindAllFiles,
     __param(0, (0, get_user_decorator_1.GetUser)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
@@ -72,6 +87,8 @@ __decorate([
 ], FilesController.prototype, "findAllFiles", null);
 __decorate([
     (0, common_1.Get)(':dirname/display-content/:fileName'),
+    files_titles_swagger_1.FilesDisplayContent,
+    display_content_swagger_1.SwaggerForDisplayContent,
     __param(0, (0, common_1.Param)('dirname')),
     __param(1, (0, common_1.Param)('fileName')),
     __param(2, (0, get_user_decorator_1.GetUser)()),

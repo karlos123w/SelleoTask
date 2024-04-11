@@ -88,8 +88,6 @@ export class UsersService {
         'To execute this command you must have the admin role',
       );
 
-    console.log('admin zanaleziony');
-
     return foundAdmin;
   }
 

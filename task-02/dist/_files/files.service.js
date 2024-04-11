@@ -35,30 +35,34 @@ let FilesService = class FilesService {
         this.filesModel = filesModel;
         this.usersService = usersService;
     }
-    async createFolder(folderName, signedUser) {
+    async createDirectory(dirname, signedUser) {
         await this.usersService.findAdmin(signedUser);
-        const pathToSave = `./uploads/${folderName}`;
+        const pathToSave = `./uploads/${dirname}`;
         const folderExist = file_helper_1.FileHelper.checkIfFolderExist(pathToSave);
         if (folderExist)
-            throw new common_1.ConflictException('Folder already exist');
+            throw new common_1.ConflictException(`Directory: ${dirname} already exists`);
         if (!folderExist)
             file_helper_1.FileHelper.createFolder(pathToSave);
-        return { message: 'Folder created ' };
+        return { message: 'Directory created' };
     }
-    async findAllFolders(signedUser) {
+    async findAllDirectories(signedUser) {
         const path = './uploads';
         const isAdmin = await this.usersService.isAdmin(signedUser);
         const foundAllFolders = await file_helper_1.FileHelper.getAllFolders(path, isAdmin);
         return foundAllFolders;
     }
-    async addFileToFolder(folderName, file) {
-        const path = `./uploads/${folderName}`;
+    async addFileToDirectory(dirname, file, signedUser) {
+        const isAdmin = await this.usersService.isAdmin(signedUser);
+        if (!isAdmin && dirname === 'admin') {
+            throw new common_1.BadRequestException('Access to files in the (admin) directory is only for admins');
+        }
+        const path = `./uploads/${dirname}`;
         if (!file_helper_1.FileHelper.checkIfFolderExist(path)) {
-            throw new common_1.ConflictException('Folder to save file not found');
+            throw new common_1.ConflictException('Directory to save file not found');
         }
         try {
             if (file instanceof multer_1.MulterError) {
-                throw new common_1.BadRequestException(file.message);
+                throw new common_1.ConflictException(file.message);
             }
             const filename = `${Date.now()}-${file.originalname}`;
             await fs.writeFile(`${path}/${filename}`, file.buffer);
@@ -66,11 +70,11 @@ let FilesService = class FilesService {
         }
         catch (error) {
             console.error('Error uploading file:', error);
-            throw new common_1.BadRequestException('Error saving file');
+            throw new common_1.ConflictException('Error saving file');
         }
     }
     async findAllFiles(signedUser) {
-        const foundFolders = await this.findAllFolders(signedUser);
+        const foundFolders = await this.findAllDirectories(signedUser);
         if (!foundFolders)
             return [];
         const directories = [];
@@ -87,7 +91,7 @@ let FilesService = class FilesService {
     async displayContent(dirname, fileName, signedUser) {
         const isAdmin = await this.usersService.isAdmin(signedUser);
         if (!isAdmin && dirname === 'admin') {
-            throw new common_1.BadRequestException('Access to files in the (admin) folder is only for admins');
+            throw new common_1.BadRequestException('Access to files in the (admin) direcotory is only for admins');
         }
         const path = `./uploads/${dirname}/${fileName}`;
         try {

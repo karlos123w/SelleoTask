@@ -30,19 +30,20 @@ export class FilesService {
     private readonly usersService: UsersService,
   ) {}
 
-  async createFolder(folderName: string, signedUser: string) {
+  async createDirectory(dirname: string, signedUser: string) {
     await this.usersService.findAdmin(signedUser);
 
-    const pathToSave = `./uploads/${folderName}`;
+    const pathToSave = `./uploads/${dirname}`;
 
     const folderExist = FileHelper.checkIfFolderExist(pathToSave);
-    if (folderExist) throw new ConflictException('Folder already exist');
+    if (folderExist)
+      throw new ConflictException(`Directory: ${dirname} already exists`);
     if (!folderExist) FileHelper.createFolder(pathToSave);
 
-    return { message: 'Folder created ' };
+    return { message: 'Directory created' };
   }
 
-  async findAllFolders(signedUser: string) {
+  async findAllDirectories(signedUser: string) {
     const path = './uploads';
 
     const isAdmin = await this.usersService.isAdmin(signedUser);
@@ -52,16 +53,28 @@ export class FilesService {
     return foundAllFolders;
   }
 
-  async addFileToFolder(folderName: string, file: Express.Multer.File) {
-    const path = `./uploads/${folderName}`;
+  async addFileToDirectory(
+    dirname: string,
+    file: Express.Multer.File,
+    signedUser: string,
+  ) {
+    const isAdmin = await this.usersService.isAdmin(signedUser);
+
+    if (!isAdmin && dirname === 'admin') {
+      throw new BadRequestException(
+        'Access to files in the (admin) directory is only for admins',
+      );
+    }
+
+    const path = `./uploads/${dirname}`;
 
     if (!FileHelper.checkIfFolderExist(path)) {
-      throw new ConflictException('Folder to save file not found');
+      throw new ConflictException('Directory to save file not found');
     }
 
     try {
       if (file instanceof MulterError) {
-        throw new BadRequestException(file.message);
+        throw new ConflictException(file.message);
       }
 
       const filename = `${Date.now()}-${file.originalname}`;
@@ -70,12 +83,12 @@ export class FilesService {
       return { message: 'File uploaded successfully', filename: filename };
     } catch (error) {
       console.error('Error uploading file:', error);
-      throw new BadRequestException('Error saving file');
+      throw new ConflictException('Error saving file');
     }
   }
 
   async findAllFiles(signedUser: string) {
-    const foundFolders = await this.findAllFolders(signedUser);
+    const foundFolders = await this.findAllDirectories(signedUser);
     if (!foundFolders) return [];
 
     type File = { name: string; size: number };
@@ -101,7 +114,7 @@ export class FilesService {
 
     if (!isAdmin && dirname === 'admin') {
       throw new BadRequestException(
-        'Access to files in the (admin) folder is only for admins',
+        'Access to files in the (admin) direcotory is only for admins',
       );
     }
     const path = `./uploads/${dirname}/${fileName}`;
