@@ -21,5 +21,5 @@ export declare class FilesController {
         }[];
     }[]>;
     displaContentOfFile(dirname: string, fileName: string, signedUser: SignedUser): Promise<any>;
-    getStreamVideo(videoName: string, headers: any, res: Response): Promise<void>;
+    getStreamVideo(videoName: string, res: Response, req: any): Promise<void>;
 }

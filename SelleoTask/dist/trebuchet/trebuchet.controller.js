@@ -17,6 +17,8 @@ const common_1 = require("@nestjs/common");
 const swagger_1 = require("@nestjs/swagger");
 const trebuchet_service_1 = require("./trebuchet.service");
 const text_dto_1 = require("./dtos/text.dto");
+const find_trebuchet_amount_swagger_1 = require("./swagger/find.trebuchet.amount.swagger");
+const trebuchet_titles_swagger_1 = require("./swagger/titles/trebuchet.titles.swagger");
 let TrebuchetController = class TrebuchetController {
     constructor(trebuchetService) {
         this.trebuchetService = trebuchetService;
@@ -28,6 +30,8 @@ let TrebuchetController = class TrebuchetController {
 exports.TrebuchetController = TrebuchetController;
 __decorate([
     (0, common_1.Post)('find-amount'),
+    find_trebuchet_amount_swagger_1.SwaggerForFindTrebuchetAmount,
+    trebuchet_titles_swagger_1.FindTrebuchetAmount,
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [text_dto_1.TextDto]),

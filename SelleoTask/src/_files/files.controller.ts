@@ -5,6 +5,7 @@ import {
   HttpStatus,
   Param,
   Post,
+  Req,
   Res,
   UploadedFile,
   UseInterceptors,
@@ -93,25 +94,24 @@ export class FilesController {
   }
 
   @Get('stream/:videoName')
-  @Header('Accept-Ranges', 'bytes')
-  @Header('Content-Type', 'video/mp4')
   async getStreamVideo(
     @Param('videoName') videoName: string,
-    @Headers() headers,
     @Res() res: Response,
+    @Req() req,
   ) {
     const appDirectory = fs.realpathSync(process.cwd());
     const videoDirectory = join(appDirectory, 'uploads');
-
     const videoPath = join(videoDirectory, `video/${videoName}.mp4`);
 
-    const { size } = statSync(videoPath);
-    const videoRange = headers.range;
+    const { size } = await fs.promises.stat(videoPath);
+    const videoRange = req.headers.range;
+
     if (videoRange) {
       const parts = videoRange.replace(/bytes=/, '').split('-');
       const start = parseInt(parts[0], 10);
       const end = parts[1] ? parseInt(parts[1], 10) : size - 1;
       const chunksize = end - start + 1;
+
       const readStreamfile = createReadStream(videoPath, {
         start,
         end,
@@ -121,12 +121,11 @@ export class FilesController {
         'Content-Range': `bytes ${start}-${end}/${size}`,
         'Content-Length': chunksize,
       };
+
       res.writeHead(HttpStatus.PARTIAL_CONTENT, head);
       readStreamfile.pipe(res);
     } else {
-      const head = {
-        'Content-Length': size,
-      };
+      const head = { 'Content-Length': size };
       res.writeHead(HttpStatus.OK, head);
       createReadStream(videoPath).pipe(res);
     }

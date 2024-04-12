@@ -25,7 +25,6 @@ const find_all_folders_swagger_1 = require("./swagger/find.all.folders.swagger")
 const find_all_files_swagger_1 = require("./swagger/find.all.files.swagger");
 const display_content_swagger_1 = require("./swagger/display.content.swagger");
 const fs_1 = require("fs");
-const common_2 = require("@nestjs/common");
 const path_1 = require("path");
 const fs = require("fs");
 let FilesController = class FilesController {
@@ -47,12 +46,12 @@ let FilesController = class FilesController {
     async displaContentOfFile(dirname, fileName, signedUser) {
         return await this.filesService.displayContent(dirname, fileName, signedUser.id);
     }
-    async getStreamVideo(videoName, headers, res) {
+    async getStreamVideo(videoName, res, req) {
         const appDirectory = fs.realpathSync(process.cwd());
         const videoDirectory = (0, path_1.join)(appDirectory, 'uploads');
         const videoPath = (0, path_1.join)(videoDirectory, `video/${videoName}.mp4`);
-        const { size } = (0, fs_1.statSync)(videoPath);
-        const videoRange = headers.range;
+        const { size } = await fs.promises.stat(videoPath);
+        const videoRange = req.headers.range;
         if (videoRange) {
             const parts = videoRange.replace(/bytes=/, '').split('-');
             const start = parseInt(parts[0], 10);
@@ -71,9 +70,7 @@ let FilesController = class FilesController {
             readStreamfile.pipe(res);
         }
         else {
-            const head = {
-                'Content-Length': size,
-            };
+            const head = { 'Content-Length': size };
             res.writeHead(common_1.HttpStatus.OK, head);
             (0, fs_1.createReadStream)(videoPath).pipe(res);
         }
@@ -133,11 +130,9 @@ __decorate([
 ], FilesController.prototype, "displaContentOfFile", null);
 __decorate([
     (0, common_1.Get)('stream/:videoName'),
-    (0, common_1.Header)('Accept-Ranges', 'bytes'),
-    (0, common_1.Header)('Content-Type', 'video/mp4'),
     __param(0, (0, common_1.Param)('videoName')),
-    __param(1, (0, common_2.Headers)()),
-    __param(2, (0, common_1.Res)()),
+    __param(1, (0, common_1.Res)()),
+    __param(2, (0, common_1.Req)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String, Object, Object]),
     __metadata("design:returntype", Promise)
