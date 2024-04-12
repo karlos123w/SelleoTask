@@ -15,8 +15,9 @@ export class AuthGuard implements CanActivate {
     const request: Request = context.switchToHttp().getRequest();
     const isLoginEndPoint = request.route.path === `/auth/login`;
     const isCreateUserEndpoint = request.route.path === `/users/register`;
+    const findTrebuchetAmount = request.route.path === `/trebuchet/find-amount`;
 
-    if (isCreateUserEndpoint || isLoginEndPoint) {
+    if (isCreateUserEndpoint || isLoginEndPoint || findTrebuchetAmount) {
       return true;
     }
 

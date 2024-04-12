@@ -37,8 +37,6 @@ export class UsersService {
       hashedPass: hashedPassword,
     });
 
-    console.log(process.env.AUTH_SECRET);
-
     const token = await this.generateJwtToken(
       registeredUser.id,
       registeredUser.firstName,

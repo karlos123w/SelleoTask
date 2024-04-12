@@ -37,7 +37,6 @@ let UsersService = class UsersService {
             createdAt: newDate,
             hashedPass: hashedPassword,
         });
-        console.log(process.env.AUTH_SECRET);
         const token = await this.generateJwtToken(registeredUser.id, registeredUser.firstName);
         await this.userModel.save(registeredUser);
         return {

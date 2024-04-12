@@ -13,6 +13,7 @@ const auth_module_1 = require("./auth/auth.module");
 const users_module_1 = require("./_users/users.module");
 const config_1 = require("@nestjs/config");
 const files_module_1 = require("./_files/files.module");
+const trebuchet_module_1 = require("./trebuchet/trebuchet.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -31,6 +32,7 @@ exports.AppModule = AppModule = __decorate([
             users_module_1.UsersModule,
             auth_module_1.AuthModule,
             files_module_1.FilesModule,
+            trebuchet_module_1.TrebuchetModule,
         ],
     })
 ], AppModule);
