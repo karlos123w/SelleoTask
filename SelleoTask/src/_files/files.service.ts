@@ -70,8 +70,6 @@ export class FilesService {
         throw new ConflictException(file.message);
       }
 
-      console.log(file);
-
       const filename = `${Date.now()}-${file.originalname}`;
       await fs.writeFile(`${path}/${filename}`, file.buffer);
 
