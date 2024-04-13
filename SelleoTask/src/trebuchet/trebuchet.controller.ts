@@ -1,5 +1,5 @@
 import { Body, Controller, Post } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiTags } from '@nestjs/swagger';
 import { TrebuchetService } from './trebuchet.service';
 import { TextDto } from './dtos/text.dto';
 import { SwaggerForFindTrebuchetAmount } from './swagger/find.trebuchet.amount.swagger';
@@ -13,6 +13,7 @@ export class TrebuchetController {
   @Post('find-amount')
   @SwaggerForFindTrebuchetAmount
   @FindTrebuchetAmount
+  @ApiBody({ type: TextDto })
   async findTrebuchetAmount(@Body() textDto: TextDto) {
     return await this.trebuchetService.findTrebuchetAmount(textDto);
   }

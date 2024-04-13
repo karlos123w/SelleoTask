@@ -21,7 +21,11 @@ let AuthGuard = class AuthGuard {
         const isLoginEndPoint = request.route.path === `/auth/login`;
         const isCreateUserEndpoint = request.route.path === `/users/register`;
         const findTrebuchetAmount = request.route.path === `/trebuchet/find-amount`;
-        if (isCreateUserEndpoint || isLoginEndPoint || findTrebuchetAmount) {
+        const renderApp = request.route.path === `/`;
+        if (isCreateUserEndpoint ||
+            isLoginEndPoint ||
+            findTrebuchetAmount ||
+            renderApp) {
             return true;
         }
         const token = this.extractTokenFromHeader(request);

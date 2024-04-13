@@ -14,7 +14,6 @@ async function bootstrap() {
   const configService = app.get(ConfigService);
 
   const port = configService.get<number>('PORT') || process.env.PORT;
-
   setupSwagger(app);
 
   app.useGlobalPipes(

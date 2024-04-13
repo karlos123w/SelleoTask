@@ -4,10 +4,21 @@ import { Users } from '../_users/entities/users.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
+import { ConflictException } from '@nestjs/common';
+jest.mock('@nestjs/common', () => ({
+  Injectable: jest.fn(() => {}),
+  BadRequestException: jest.fn(() => {}),
+  ConflictException: jest.fn(() => {}),
+  ForbiddenException: jest.fn(() => {}),
+  NotFoundException: jest.fn(() => {}),
+}));
+
+jest.mock('jsonwebtoken', () => ({
+  sign: jest.fn(() => 'mocked_jwt_token'),
+}));
 
 describe('UsersService', () => {
   let service: UsersService;
-  let cacheManager: { get: jest.Mock; set: jest.Mock };
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -24,6 +35,10 @@ describe('UsersService', () => {
       providers: [
         UsersModule,
         {
+          provide: 'AUTH_SECRET',
+          useValue: 'private_key',
+        },
+        {
           provide: 'CACHE_MANAGER',
           useValue: {
             get: jest.fn(),
@@ -33,7 +48,6 @@ describe('UsersService', () => {
       ],
     }).compile();
 
-    controller = module.get<UsersController>(UsersController);
     service = module.get<UsersService>(UsersService);
     cacheManager = module.get('CACHE_MANAGER') as any;
   });
@@ -94,6 +108,48 @@ describe('UsersService', () => {
 
       const result = await service.findAllUsers(mockedSignedUser.id.id);
       expect(result).toEqual(mockedUsers);
+    });
+  });
+
+  describe('signUp', () => {
+    it('should create a new user', async () => {
+      const signUpDto = {
+        firstName: 'John',
+        lastName: 'Doe',
+        email: 'john.doe@example.com',
+        pass: 'password123',
+        shirtSize: 47,
+        phoneNumber: 321987654,
+        preferredTechnology: 'JAVA',
+        role: 'user',
+      };
+
+      const result = await service.signUp(signUpDto);
+
+      expect(result.firstName).toEqual(signUpDto.firstName);
+      expect(result.lastName).toEqual(signUpDto.lastName);
+      expect(result.email).toEqual(signUpDto.email);
+      expect(result.hashedPass).not.toEqual(signUpDto.pass);
+      expect(result.token).toBeDefined();
+    });
+
+    it('should throw ConflictException if user with the same email already exists', async () => {
+      const signUpDto = {
+        firstName: 'John',
+        lastName: 'Doe',
+        email: 'john.doe@example.com',
+        pass: 'password123',
+        shirtSize: 47,
+        phoneNumber: 321987654,
+        preferredTechnology: 'JAVA',
+        role: 'user',
+      };
+
+      await service.signUp(signUpDto);
+
+      await expect(service.signUp(signUpDto)).rejects.toThrowError(
+        ConflictException,
+      );
     });
   });
 });

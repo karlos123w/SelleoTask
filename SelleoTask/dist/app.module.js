@@ -14,6 +14,7 @@ const users_module_1 = require("./_users/users.module");
 const config_1 = require("@nestjs/config");
 const files_module_1 = require("./_files/files.module");
 const trebuchet_module_1 = require("./trebuchet/trebuchet.module");
+const app_controller_1 = require("./app.controller");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -34,6 +35,7 @@ exports.AppModule = AppModule = __decorate([
             files_module_1.FilesModule,
             trebuchet_module_1.TrebuchetModule,
         ],
+        controllers: [app_controller_1.AppController],
     })
 ], AppModule);
 //# sourceMappingURL=app.module.js.map

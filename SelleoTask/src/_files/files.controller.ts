@@ -1,7 +1,6 @@
 import {
   Controller,
   Get,
-  Header,
   HttpStatus,
   Param,
   Post,
@@ -28,8 +27,7 @@ import { SwaggerForFindAllFolders } from './swagger/find.all.folders.swagger';
 import { SwaggerForFindAllFiles } from './swagger/find.all.files.swagger';
 import { SwaggerForDisplayContent } from './swagger/display.content.swagger';
 import { Response } from 'express';
-import { createReadStream, statSync } from 'fs';
-import { Headers } from '@nestjs/common';
+import { createReadStream } from 'fs';
 import { join } from 'path';
 import * as fs from 'fs';
 

@@ -32,6 +32,7 @@ __decorate([
     (0, common_1.Post)('find-amount'),
     find_trebuchet_amount_swagger_1.SwaggerForFindTrebuchetAmount,
     trebuchet_titles_swagger_1.FindTrebuchetAmount,
+    (0, swagger_1.ApiBody)({ type: text_dto_1.TextDto }),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [text_dto_1.TextDto]),

@@ -57,7 +57,6 @@ let FilesService = class FilesService {
             if (file instanceof multer_1.MulterError) {
                 throw new common_1.ConflictException(file.message);
             }
-            console.log(file);
             const filename = `${Date.now()}-${file.originalname}`;
             await fs.writeFile(`${path}/${filename}`, file.buffer);
             return { message: 'File uploaded successfully', filename: filename };
